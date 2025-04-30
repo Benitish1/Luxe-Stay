@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LuxeStay - Premium Hotel Booking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
+        .review-container {
+            overflow: hidden;
+            position: relative;
+        }
+        .review-slider {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+        .review-slide {
+            flex: 0 0 33.333%;
+            padding: 0 1rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-white shadow-md fixed w-full z-10">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold text-gray-800">LuxeStay</div>
+            <div class="space-x-6">
+                <a href="#home" class="text-gray-600 hover:text-gray-800 transition">Home</a>
+                <a href="#about" class="text-gray-600 hover:text-gray-800 transition">About</a>
+                <a href="#explore" class="text-gray-600 hover:text-gray-800 transition">Explore</a>
+                <a href="#hotels" class="text-gray-600 hover:text-gray-800 transition">Hotels</a>
+                <a href="#destinations" class="text-gray-600 hover:text-gray-800 transition">Destinations</a>
+                <a href="#reviews" class="text-gray-600 hover:text-gray-800 transition">Reviews</a>
+                <a href="#booking" class="text-gray-600 hover:text-gray-800 transition">Book Now</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center bg-cover bg-center relative" style="background-image: url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')">
+        <div class="absolute inset-0 bg-black opacity-50"></div>
+        <div class="container mx-auto px-6 text-center text-white relative z-10">
+            <h1 class="text-5xl md:text-6xl font-bold mb-4 drop-shadow-lg">Experience Luxury Like Never Before</h1>
+            <p class="text-lg md:text-xl mb-6 drop-shadow-lg">Discover the finest hotels with unmatched elegance and comfort.</p>
+            <a href="#booking" class="inline-block bg-amber-500 text-white py-3 px-8 rounded-full hover:bg-amber-600 transition font-medium text-lg shadow-md">Book Your Stay</a>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">About LuxeStay</h2>
+            <div class="flex flex-col md:flex-row items-center gap-8">
+                <div class="md:w-1/2">
+                    <img src="https://images.unsplash.com/photo-1621293954908-907159247fc8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="About LuxeStay" class="w-full h-96 object-cover rounded-lg shadow-lg">
+                </div>
+                <div class="md:w-1/2">
+                    <p class="text-gray-600 text-lg mb-6">At LuxeStay, we redefine luxury by curating exceptional hotel experiences that blend sophistication with comfort. Our mission is to provide unparalleled hospitality, ensuring every guest feels pampered and inspired.</p>
+                    <p class="text-gray-600 text-lg mb-6">With a passion for excellence, we partner with the world’s finest hotels to offer you stays that are as unique as you are. From serene beachfront retreats to vibrant urban escapes, LuxeStay is your gateway to unforgettable moments.</p>
+                    <a href="#booking" class="inline-block bg-amber-500 text-white py-3 px-6 rounded-full hover:bg-amber-600 transition">Discover Your Stay</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Explore Our Hotels Section -->
+    <section id="explore" class="py-20 bg-gray-100">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Explore Our Hotels</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Feature 1 -->
+                <div class="relative bg-cover bg-center h-96 rounded-lg shadow-lg" style="background-image: url('https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')">
+                    <div class="absolute inset-0 bg-black opacity-50 rounded-lg"></div>
+                    <div class="relative flex flex-col justify-center items-center h-full text-white text-center p-6">
+                        <h3 class="text-2xl font-bold mb-4">Elegant Suites</h3>
+                        <p class="text-lg">Indulge in spacious suites designed with timeless elegance, offering panoramic views and premium amenities.</p>
+                    </div>
+                </div>
+                <!-- Feature 2 -->
+                <div class="relative bg-cover bg-center h-96 rounded-lg shadow-lg" style="background-image: url('https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')">
+                    <div class="absolute inset-0 bg-black opacity-50 rounded-lg"></div>
+                    <div class="relative flex flex-col justify-center items-center h-full text-white text-center p-6">
+                        <h3 class="text-2xl font-bold mb-4">World-Class Dining</h3>
+                        <p class="text-lg">Savor culinary masterpieces crafted by award-winning chefs, from fine dining to casual elegance.</p>
+                    </div>
+                </div>
+                <!-- Feature 3 -->
+                <div class="relative bg-cover bg-center h-96 rounded-lg shadow-lg" style="background-image: url('https://images.unsplash.com/photo-1618773928121-c32242e63f39?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')">
+                    <div class="absolute inset-0 bg-black opacity-50 rounded-lg"></div>
+                    <div class="relative flex flex-col justify-center items-center h-full text-white text-center p-6">
+                        <h3 class="text-2xl font-bold mb-4">Spa & Wellness</h3>
+                        <p class="text-lg">Rejuvenate your body and soul with bespoke spa treatments in tranquil, luxurious settings.</p>
+                    </div>
+                </div>
+                <!-- Feature 4 -->
+                <div class="relative bg-cover bg-center h-96 rounded-lg shadow-lg" style="background-image: url('https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')">
+                    <div class="absolute inset-0 bg-black opacity-50 rounded-lg"></div>
+                    <div class="relative flex flex-col justify-center items-center h-full text-white text-center p-6">
+                        <h3 class="text-2xl font-bold mb-4">Exclusive Events</h3>
+                        <p class="text-lg">Host unforgettable events in our stunning venues, tailored to your vision with impeccable service.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-12">
+                <a href="#hotels" class="inline-block bg-amber-500 text-white py-3 px-6 rounded-full hover:bg-amber-600 transition">View All Hotels</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hotels Section -->
+    <section id="hotels" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Our Premium Hotels</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Hotel Card 1 -->
+                <div class="bg-gray-100 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition">
+                    <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Hotel 1" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">The Grand Palace</h3>
+                        <p class="text-gray-600 mb-4">A luxurious retreat in the heart of the city with stunning views and world-class amenities.</p>
+                        <p class="text-amber-500 font-bold">$250 / night</p>
+                        <a href="#booking" class="inline-block mt-4 bg-amber-500 text-white py-2 px-4 rounded-full hover:bg-amber-600 transition">Book Now</a>
+                    </div>
+                </div>
+                <!-- Hotel Card 2 -->
+                <div class="bg-gray-100 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition">
+                    <img src="https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Hotel 2" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Ocean Serenity</h3>
+                        <p class="text-gray-600 mb-4">Beachfront elegance with private villas and serene ocean views.</p>
+                        <p class="text-amber-500 font-bold">$320 / night</p>
+                        <a href="#booking" class="inline-block mt-4 bg-amber-500 text-white py-2 px-4 rounded-full hover:bg-amber-600 transition">Book Now</a>
+                    </div>
+                </div>
+                <!-- Hotel Card 3 -->
+                <div class="bg-gray-100 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition">
+                    <img src="https://images.unsplash.com/photo-1596436889106-be35e843f974?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Hotel 3" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Mountain Haven</h3>
+                        <p class="text-gray-600 mb-4">A cozy escape nestled in the mountains with breathtaking landscapes.</p>
+                        <p class="text-amber-500 font-bold">$200 / night</p>
+                        <a href="#booking" class="inline-block mt-4 bg-amber-500 text-white py-2 px-4 rounded-full hover:bg-amber-600 transition">Book Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Destinations Section -->
+    <section id="destinations" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Discover Our Destinations</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Destination 1 -->
+                <div class="relative rounded-lg overflow-hidden shadow-lg">
+                    <img src="https://images.unsplash.com/photo-1519046904884-53103b34b206?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Beach Destination" class="w-full h-64 object-cover">
+                    <div class="absolute inset-0 bg-black opacity-30"></div>
+                    <div class="absolute bottom-0 p-6 text-white">
+                        <h3 class="text-2xl font-bold mb-2">Tropical Paradise</h3>
+                        <p class="text-sm">Relax in sun-kissed beaches and crystal waters, perfect for a serene getaway.</p>
+                    </div>
+                </div>
+                <!-- Destination 2 -->
+                <div class="relative rounded-lg overflow-hidden shadow-lg">
+                    <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Mountain Destination" class="w-full h-64 object-cover">
+                    <div class="absolute inset-0 bg-black opacity-30"></div>
+                    <div class="absolute bottom-0 p-6 text-white">
+                        <h3 class="text-2xl font-bold mb-2">Mountain Retreat</h3>
+                        <p class="text-sm">Explore breathtaking peaks and cozy lodges for an adventurous escape.</p>
+                    </div>
+                </div>
+                <!-- Destination 3 -->
+                <div class="relative rounded-lg overflow-hidden shadow-lg">
+                    <img src="https://images.unsplash.com/photo-1499678329028-101435549a4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="City Destination" class="w-full h-64 object-cover">
+                    <div class="absolute inset-0 bg-black opacity-30"></div>
+                    <div class="absolute bottom-0 p-6 text-white">
+                        <h3 class="text-2xl font-bold mb-2">Urban Adventure</h3>
+                        <p class="text-sm">Immerse yourself in vibrant city life with culture, dining, and luxury.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-12">
+                <a href="#hotels" class="inline-block bg-amber-500 text-white py-3 px-6 rounded-full hover:bg-amber-600 transition">Explore Hotels</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Guest Reviews Section -->
+    <section id="reviews" class="py-20 bg-gray-100">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">What Our Guests Say</h2>
+            <div class="review-container">
+                <div class="review-slider">
+                    <!-- Review 1 -->
+                    <div class="review-slide">
+                        <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+                            <div class="flex justify-center mb-4">
+                                <span class="text-amber-500 text-xl">★★★★★</span>
+                            </div>
+                            <p class="text-gray-600 italic mb-4">"An unforgettable stay at The Grand Palace! The service was impeccable, and the ambiance was pure luxury."</p>
+                            <p class="text-gray-800 font-medium">Emma Thompson</p>
+                            <p class="text-gray-500 text-sm">London, UK</p>
+                        </div>
+                    </div>
+                    <!-- Review 2 -->
+                    <div class="review-slide">
+                        <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+                            <div class="flex justify-center mb-4">
+                                <span class="text-amber-500 text-xl">★★★★★</span>
+                            </div>
+                            <p class="text-gray-600 italic mb-4">"Ocean Serenity was a dream! The beachfront views and dining experience were beyond compare."</p>
+                            <p class="text-gray-800 font-medium">Carlos Rivera</p>
+                            <p class="text-gray-500 text-sm">Miami, USA</p>
+                        </div>
+                    </div>
+                    <!-- Review 3 -->
+                    <div class="review-slide">
+                        <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+                            <div class="flex justify-center mb-4">
+                                <span class="text-amber-500 text-xl">★★★★☆</span>
+                            </div>
+                            <p class="text-gray-600 italic mb-4">"Mountain Haven offered the perfect escape. The serene environment and cozy rooms were delightful!"</p>
+                            <p class="text-gray-800 font-medium">Aisha Khan</p>
+                            <p class="text-gray-500 text-sm">Dubai, UAE</p>
+                        </div>
+                    </div>
+                    <!-- Review 4 -->
+                    <div class="review-slide">
+                        <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+                            <div class="flex justify-center mb-4">
+                                <span class="text-amber-500 text-xl">★★★★★</span>
+                            </div>
+                            <p class="text-gray-600 italic mb-4">"The spa at Ocean Serenity was divine! A truly rejuvenating experience."</p>
+                            <p class="text-gray-800 font-medium">Sophie Laurent</p>
+                            <p class="text-gray-500 text-sm">Paris, France</p>
+                        </div>
+                    </div>
+                    <!-- Review 5 -->
+                    <div class="review-slide">
+                        <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+                            <div class="flex justify-center mb-4">
+                                <span class="text-amber-500 text-xl">★★★★☆</span>
+                            </div>
+                            <p class="text-gray-600 italic mb-4">"The Grand Palace’s rooftop dining was spectacular, with views that took my breath away."</p>
+                            <p class="text-gray-800 font-medium">Raj Patel</p>
+                            <p class="text-gray-500 text-sm">Mumbai, India</p>
+                        </div>
+                    </div>
+                    <!-- Review 6 -->
+                    <div class="review-slide">
+                        <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+                            <div class="flex justify-center mb-4">
+                                <span class="text-amber-500 text-xl">★★★★★</span>
+                            </div>
+                            <p class="text-gray-600 italic mb-4">"Mountain Haven’s cozy charm and stunning trails made our trip unforgettable."</p>
+                            <p class="text-gray-800 font-medium">Liam Chen</p>
+                            <p class="text-gray-500 text-sm">Sydney, Australia</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Slider Navigation -->
+                <div class="flex justify-center mt-8 space-x-4">
+                    <button onclick="prevSlide()" class="bg-amber-500 text-white p-2 rounded-full hover:bg-amber-600 transition">←</button>
+                    <button onclick="nextSlide()" class="bg-amber-500 text-white p-2 rounded-full hover:bg-amber-600 transition">→</button>
+                </div>
+            </div>
+            <div class="text-center mt-12">
+                <a href="#booking" class="inline-block bg-amber-500 text-white py-3 px-6 rounded-full hover:bg-amber-600 transition">Share Your Experience</a>
+            </div>
+        </div>
+        <script>
+            let currentSlide = 0;
+            const slider = document.querySelector('.review-slider');
+            const slides = document.querySelectorAll('.review-slide');
+            const totalSlides = slides.length;
+
+            function updateSlider() {
+                const offset = -currentSlide * (100 / 3);
+                slider.style.transform = `translateX(${offset}%)`;
+            }
+
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % (totalSlides - 2);
+                updateSlider();
+            }
+
+            function prevSlide() {
+                currentSlide = (currentSlide - 1 + (totalSlides - 2)) % (totalSlides - 2);
+                updateSlider();
+            }
+
+            // Auto-slide every 5 seconds
+            setInterval(nextSlide, 5000);
+
+            // Initialize slider
+            updateSlider();
+        </script>
+    </section>
+
+    <!-- Booking Form Section -->
+    <section id="booking" class="py-20 bg-gray-100">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Book Your Stay</h2>
+            <div class="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-lg">
+                <div class="space-y-6">
+                    <div>
+                        <label for="name" class="block text-gray-700 font-medium">Full Name</label>
+                        <input type="text" id="name" class="w-full mt-2 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500" placeholder="John Doe">
+                    </div>
+                    <div>
+                        <label for="hotel" class="block text-gray-700 font-medium">Select Hotel</label>
+                        <select id="hotel" class="w-full mt-2 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500">
+                            <option>The Grand Palace</option>
+                            <option>Ocean Serenity</option>
+                            <option>Mountain Haven</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="checkin" class="block text-gray-700 font-medium">Check-In Date</label>
+                        <input type="date" id="checkin" class="w-full mt-2 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500">
+                    </div>
+                    <div>
+                        <label for="checkout" class="block text-gray-700 font-medium">Check-Out Date</label>
+                        <input type="date" id="checkout" class="w-full mt-2 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500">
+                    </div>
+                    <button onclick="alert('Booking submitted! (This is a static demo)')" class="w-full bg-amber-500 text-white py-3 rounded-full hover:bg-amber-600 transition">Submit Booking</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Subscription Form -->
+                <div>
+                    <h3 class="text-2xl font-bold mb-4">Subscribe to Our Newsletter</h3>
+                    <p class="text-gray-300 mb-4">Stay updated with exclusive offers and travel inspiration.</p>
+                    <div class="flex">
+                        <input type="email" id="subscribe-email" placeholder="Enter your email" class="w-full p-3 rounded-l-lg bg-gray-700 text-white border-none focus:outline-none focus:ring-2 focus:ring-amber-500">
+                        <button onclick="alert('Subscribed! (This is a static demo)')" class="bg-amber-500 text-white p-3 rounded-r-lg hover:bg-amber-600 transition">Subscribe</button>
+                    </div>
+                </div>
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-2xl font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="hover:text-amber-500 transition">Home</a></li>
+                        <li><a href="#about" class="hover:text-amber-500 transition">About Us</a></li>
+                        <li><a href="#hotels" class="hover:text-amber-500 transition">Hotels</a></li>
+                        <li><a href="#destinations" class="hover:text-amber-500 transition">Destinations</a></li>
+                        <li><a href="#booking" class="hover:text-amber-500 transition">Book Now</a></li>
+                    </ul>
+                </div>
+                <!-- Social Media & Contact -->
+                <div>
+                    <h3 class="text-2xl font-bold mb-4">Connect With Us</h3>
+                    <div class="flex space-x-4 mb-4">
+                        <a href="#" class="hover:text-amber-500 transition"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg></a>
+                        <a href="#" class="hover:text-amber-500 transition"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06c0 2.385 1.693 4.374 3.946 4.827a4.923 4.923 0 01-2.224.084c.63 1.953 2.445 3.377 4.6 3.417a9.898 9.898 0 01-6.125 2.11c-.398 0-.79-.023-1.175-.068a13.944 13.944 0 007.548 2.212c9.054 0 14.002-7.496 14.002-13.986 0-.21-.005-.423-.014-.635A9.936 9.936 0 0024 4.59z"/></svg></a>
+                        <a href="#" class="hover:text-amber-500 transition"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.164 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.865-.013-1.697-2.782.605-3.369-1.34-3.369-1.34-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.004.07 1.532 1.032 1.532 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.026 2.747-1.026.546 1.378.203 2.397.1 2.65.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12c0-5.523-4.477-10-10-10z"/></svg></a>
+                    </div>
+                    <p class="text-gray-300">Contact: <a href="mailto:info@luxestay.com" class="hover:text-amber-500 transition">info@luxestay.com</a></p>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-gray-700 text-center">
+                <p class="text-lg">© 2025 LuxeStay. All rights reserved.</p>
+                <div class="mt-4 space-x-4">
+                    <a href="#" class="hover:text-amber-500 transition">Privacy Policy</a>
+                    <a href="#" class="hover:text-amber-500 transition">Terms of Service</a>
+                    <a href="#" class="hover:text-amber-500 transition">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
