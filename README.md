@@ -4,6 +4,8 @@ A full-stack hotel management system built with **FastAPI** (Python) and **Next.
 
 ---
 
+**[🚀 Live Demo: View LuxeStay](https://luxe-stay-mu.vercel.app/)**
+
 ## ✨ Features
 
 | Feature | Description |
