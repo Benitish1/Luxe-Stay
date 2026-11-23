@@ -1,195 +1,142 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useAuth } from '@/lib/auth-context';
-import { roomsAPI, bookingsAPI } from '@/lib/api';
+import Link from 'next/link';
+import { ArrowRight, BedDouble, ChefHat, DollarSign, LogIn, LogOut, Percent } from 'lucide-react';
+import { RevenueChart, Stat } from '@/components/dash';
+import { Badge, timeAgo, today } from '@/components/ui';
+import { revenueHistory } from '@/lib/seed';
+import { useStore } from '@/lib/store';
+import { money } from '@/lib/config';
 
-interface Stats {
-  totalRooms: number;
-  availableRooms: number;
-  totalBookings: number;
-  pendingBookings: number;
-}
+const ROOM_STATUS = [
+  { id: 'available', label: 'Available', cls: 'bg-emerald-500' },
+  { id: 'occupied', label: 'Occupied', cls: 'bg-sky-600' },
+  { id: 'cleaning', label: 'Cleaning', cls: 'bg-amber-400' },
+  { id: 'maintenance', label: 'Maintenance', cls: 'bg-rose-500' },
+] as const;
 
-export default function DashboardPage() {
-  const { user } = useAuth();
-  const [stats, setStats] = useState<Stats>({
-    totalRooms: 0,
-    availableRooms: 0,
-    totalBookings: 0,
-    pendingBookings: 0,
-  });
-  const [recentBookings, setRecentBookings] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+export default function DashboardHome() {
+  const { db, setBookingStatus, notify } = useStore();
+  const t = today();
+  const total = db.rooms.length;
+  const occupied = db.rooms.filter((r) => r.status === 'occupied').length;
+  const occupancy = total ? Math.round((occupied / total) * 100) : 0;
+  const arrivals = db.bookings.filter((b) => b.checkIn === t && ['confirmed', 'pending'].includes(b.status));
+  const departures = db.bookings.filter((b) => b.checkOut === t && b.status === 'checked_in');
+  const inHouse = db.bookings.filter((b) => b.status === 'checked_in');
+  const activeOrders = db.orders.filter((o) => ['received', 'preparing', 'ready'].includes(o.status));
+  const todaysDining = db.orders.filter((o) => o.createdAt.slice(0, 10) === t && o.status !== 'cancelled').reduce((s, o) => s + o.total, 0);
+  const adr = inHouse.length ? inHouse.reduce((s, b) => s + (db.roomTypes.find((r) => r.id === b.roomTypeId)?.price || 0), 0) / inHouse.length : 0;
+  const chart = revenueHistory.map((d, i) => ({ date: d.date, value: d.rooms + d.dining + (i === revenueHistory.length - 1 ? Math.round(todaysDining) : 0) }));
+  const fortnight = chart.reduce((s, d) => s + d.value, 0);
 
-  useEffect(() => {
-    loadDashboardData();
-  }, []);
-
-  const loadDashboardData = async () => {
-    try {
-      const [roomsData, bookingsData] = await Promise.all([
-        roomsAPI.getAll().catch(() => []),
-        user?.role === 'guest' 
-          ? bookingsAPI.getMyBookings().catch(() => [])
-          : bookingsAPI.getAll().catch(() => []),
-      ]);
-
-      setStats({
-        totalRooms: roomsData.length,
-        availableRooms: roomsData.filter((r: any) => r.is_available).length,
-        totalBookings: bookingsData.length,
-        pendingBookings: bookingsData.filter((b: any) => b.status === 'pending').length,
-      });
-
-      setRecentBookings(bookingsData.slice(0, 5));
-    } catch (error) {
-      console.error('Failed to load dashboard data:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const statCards = [
-    {
-      title: 'Total Rooms',
-      value: stats.totalRooms,
-      icon: '🛏️',
-      color: 'from-blue-500 to-blue-600',
-      bgColor: 'bg-blue-50',
-    },
-    {
-      title: 'Available Rooms',
-      value: stats.availableRooms,
-      icon: '✅',
-      color: 'from-green-500 to-green-600',
-      bgColor: 'bg-green-50',
-    },
-    {
-      title: user?.role === 'guest' ? 'My Bookings' : 'Total Bookings',
-      value: stats.totalBookings,
-      icon: '📅',
-      color: 'from-purple-500 to-purple-600',
-      bgColor: 'bg-purple-50',
-    },
-    {
-      title: 'Pending',
-      value: stats.pendingBookings,
-      icon: '⏳',
-      color: 'from-orange-500 to-orange-600',
-      bgColor: 'bg-orange-50',
-    },
-  ];
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="w-12 h-12 border-4 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    );
-  }
+  const roomName = (typeId: string) => db.roomTypes.find((r) => r.id === typeId)?.name;
+  const roomNo = (id?: string) => db.rooms.find((r) => r.id === id)?.number;
 
   return (
-    <div className="space-y-8">
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {statCards.map((stat, index) => (
-          <div
-            key={index}
-            className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow duration-300"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-500 text-sm font-medium">{stat.title}</p>
-                <p className="text-3xl font-bold text-gray-900 mt-1">{stat.value}</p>
-              </div>
-              <div className={`w-14 h-14 ${stat.bgColor} rounded-xl flex items-center justify-center text-2xl`}>
-                {stat.icon}
-              </div>
-            </div>
-          </div>
-        ))}
+    <div className="space-y-6">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <Stat label="Occupancy" value={`${occupancy}%`} hint={`${occupied} of ${total} rooms occupied`} icon={<Percent size={16} />} />
+        <Stat label="Arrivals today" value={String(arrivals.length)} hint={`${departures.length} departures · ${inHouse.length} in-house`} icon={<LogIn size={16} />} />
+        <Stat label="Avg. daily rate" value={money(Math.round(adr))} hint="Across in-house guests" icon={<DollarSign size={16} />} />
+        <Stat label="Kitchen" value={String(activeOrders.length)} hint={`Active orders · ${money(todaysDining)} today`} icon={<ChefHat size={16} />} />
       </div>
 
-      {/* Recent Bookings */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-100">
-          <h2 className="text-lg font-semibold text-gray-900">Recent Bookings</h2>
+      <div className="grid gap-6 xl:grid-cols-[1.6fr_1fr]">
+        <div className="card p-6">
+          <div className="flex flex-wrap items-end justify-between gap-2">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-ink-500">Total revenue · last 14 days</p>
+              <p className="mt-1 font-display text-4xl font-semibold">{money(fortnight)}</p>
+            </div>
+            <p className="text-xs text-ink-500">Rooms + dining, per day</p>
+          </div>
+          <div className="mt-4"><RevenueChart data={chart} /></div>
         </div>
-        <div className="p-6">
-          {recentBookings.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="text-5xl mb-4">📅</div>
-              <p className="text-gray-500">No bookings yet</p>
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="text-left text-gray-500 text-sm">
-                    <th className="pb-4 font-medium">Booking ID</th>
-                    <th className="pb-4 font-medium">Room</th>
-                    <th className="pb-4 font-medium">Check-in</th>
-                    <th className="pb-4 font-medium">Check-out</th>
-                    <th className="pb-4 font-medium">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {recentBookings.map((booking) => (
-                    <tr key={booking.id} className="text-gray-700">
-                      <td className="py-4 font-medium">#{booking.id}</td>
-                      <td className="py-4">Room {booking.room_id}</td>
-                      <td className="py-4">{new Date(booking.start_date).toLocaleDateString()}</td>
-                      <td className="py-4">{new Date(booking.end_date).toLocaleDateString()}</td>
-                      <td className="py-4">
-                        <span
-                          className={`px-3 py-1 rounded-full text-xs font-medium ${
-                            booking.status === 'confirmed'
-                              ? 'bg-green-100 text-green-700'
-                              : booking.status === 'pending'
-                              ? 'bg-yellow-100 text-yellow-700'
-                              : booking.status === 'cancelled'
-                              ? 'bg-red-100 text-red-700'
-                              : 'bg-gray-100 text-gray-700'
-                          }`}
-                        >
-                          {booking.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+
+        <div className="card p-6">
+          <p className="text-xs font-semibold uppercase tracking-wider text-ink-500">Room status</p>
+          <p className="mt-1 font-display text-4xl font-semibold">{total} rooms</p>
+          <div className="mt-6 flex h-4 gap-0.5 overflow-hidden rounded-full">
+            {ROOM_STATUS.map((s) => {
+              const n = db.rooms.filter((r) => r.status === s.id).length;
+              return n ? <div key={s.id} className={`${s.cls} first:rounded-l-full last:rounded-r-full`} style={{ width: `${(n / total) * 100}%` }} title={`${s.label}: ${n}`} /> : null;
+            })}
+          </div>
+          <ul className="mt-6 space-y-3">
+            {ROOM_STATUS.map((s) => {
+              const n = db.rooms.filter((r) => r.status === s.id).length;
+              return (
+                <li key={s.id} className="flex items-center justify-between text-sm">
+                  <span className="flex items-center gap-3"><span className={`h-2.5 w-2.5 rounded-full ${s.cls}`} />{s.label}</span>
+                  <span className="font-semibold">{n} <span className="font-normal text-ink-500">· {Math.round((n / total) * 100)}%</span></span>
+                </li>
+              );
+            })}
+          </ul>
+          <Link href="/dashboard/rooms" className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-gold-700">Open front desk <ArrowRight size={14} /></Link>
+        </div>
+      </div>
+
+      <div className="grid gap-6 xl:grid-cols-2">
+        <div className="card p-6">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="font-display text-2xl">Today&apos;s arrivals</h2>
+            <Link href="/dashboard/reservations" className="text-xs font-semibold text-gold-700">All reservations →</Link>
+          </div>
+          {arrivals.length === 0 ? <p className="py-8 text-center text-sm text-ink-500">No arrivals expected today.</p> : (
+            <ul className="divide-y divide-ink/5">
+              {arrivals.map((b) => (
+                <li key={b.id} className="flex items-center justify-between gap-3 py-3">
+                  <div>
+                    <p className="font-semibold">{b.guestName}</p>
+                    <p className="text-xs text-ink-500">{roomName(b.roomTypeId)} · {b.guests} guests{b.extras.length > 0 && ` · ${b.extras.join(', ')}`}</p>
+                  </div>
+                  <button onClick={() => { setBookingStatus(b.id, 'checked_in'); notify(`${b.guestName} checked in`); }} className="btn-dark btn-sm"><LogIn size={13} /> Check in</button>
+                </li>
+              ))}
+            </ul>
+          )}
+          {departures.length > 0 && (
+            <>
+              <h3 className="mb-2 mt-6 font-display text-xl">Departures</h3>
+              <ul className="divide-y divide-ink/5">
+                {departures.map((b) => (
+                  <li key={b.id} className="flex items-center justify-between gap-3 py-3">
+                    <div><p className="font-semibold">{b.guestName}</p><p className="text-xs text-ink-500">Room {roomNo(b.roomId)} · {money(b.total)}</p></div>
+                    <button onClick={() => { setBookingStatus(b.id, 'checked_out'); notify(`${b.guestName} checked out`); }} className="btn-outline btn-sm"><LogOut size={13} /> Check out</button>
+                  </li>
+                ))}
+              </ul>
+            </>
           )}
         </div>
-      </div>
 
-      {/* Quick Actions */}
-      {user?.role !== 'guest' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-gradient-to-r from-primary-500 to-primary-700 rounded-2xl p-6 text-white">
-            <h3 className="text-lg font-semibold mb-2">Add New Room</h3>
-            <p className="text-primary-100 text-sm mb-4">Create a new room listing for guests to book</p>
-            <a
-              href="/dashboard/rooms"
-              className="inline-flex items-center px-4 py-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors text-sm font-medium"
-            >
-              Go to Rooms →
-            </a>
+        <div className="card p-6">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="font-display text-2xl">Live kitchen orders</h2>
+            <Link href="/dashboard/orders" className="text-xs font-semibold text-gold-700">Kitchen board →</Link>
           </div>
-          <div className="bg-gradient-to-r from-purple-500 to-purple-700 rounded-2xl p-6 text-white">
-            <h3 className="text-lg font-semibold mb-2">Manage Bookings</h3>
-            <p className="text-purple-100 text-sm mb-4">View and manage all booking requests</p>
-            <a
-              href="/dashboard/bookings"
-              className="inline-flex items-center px-4 py-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors text-sm font-medium"
-            >
-              Go to Bookings →
-            </a>
+          {activeOrders.length === 0 ? <p className="py-8 text-center text-sm text-ink-500">The kitchen is quiet.</p> : (
+            <ul className="divide-y divide-ink/5">
+              {activeOrders.map((o) => (
+                <li key={o.id} className="flex items-center justify-between gap-3 py-3">
+                  <div className="min-w-0">
+                    <p className="font-semibold">{o.location} <span className="font-normal text-ink-500">· {o.customerName}</span></p>
+                    <p className="truncate text-xs text-ink-500">{o.lines.map((l) => `${l.qty}× ${l.name}`).join(', ')}</p>
+                  </div>
+                  <div className="shrink-0 text-right"><Badge status={o.status} /><p className="mt-1 text-[11px] text-ink-500">{timeAgo(o.createdAt)}</p></div>
+                </li>
+              ))}
+            </ul>
+          )}
+          <div className="mt-6 grid grid-cols-2 gap-3">
+            <div className="rounded-xl bg-ivory p-4"><p className="text-xs text-ink-500">Housekeeping open</p><p className="font-display text-3xl">{db.tasks.filter((x) => x.status !== 'done').length}</p></div>
+            <div className="rounded-xl bg-ivory p-4"><p className="text-xs text-ink-500">Spa requests</p><p className="font-display text-3xl">{db.serviceRequests.filter((x) => x.status === 'requested').length}</p></div>
           </div>
         </div>
-      )}
+      </div>
+      <p className="flex items-center gap-2 text-xs text-ink-500"><BedDouble size={14} /> Demo data — changes are saved in this browser only until the Java backend is connected.</p>
     </div>
   );
 }

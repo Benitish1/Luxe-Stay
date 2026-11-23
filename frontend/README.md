@@ -1,63 +1,55 @@
-# LuxeStay Frontend
+# LuxeStay — Frontend
 
-The frontend for the LuxeStay Hotel Management System, built with Next.js 14, TypeScript, and Tailwind CSS.
+Luxury hotel website + management dashboard built with **Next.js 14, React, TypeScript and Tailwind CSS**.
+It currently runs on **demo data** (saved in the browser's localStorage) so it works without a backend.
 
-## Getting Started
+## Run it
 
-### Prerequisites
-- Node.js 18+ 
-- npm or yarn
-
-### Installation
-
-1. Navigate to the frontend directory:
 ```bash
 cd frontend
-```
-
-2. Install dependencies:
-```bash
 npm install
+npm run dev        # http://localhost:3000
 ```
 
-3. Create a `.env.local` file (optional):
-```
-NEXT_PUBLIC_API_URL=http://localhost:8000
-```
+## Demo accounts
 
-4. Start the development server:
-```bash
-npm run dev
-```
+| Role  | Email               | Password  | Goes to       |
+|-------|---------------------|-----------|---------------|
+| Admin | admin@luxestay.com  | admin123  | `/dashboard`  |
+| Staff | staff@luxestay.com  | staff123  | `/dashboard`  |
+| Guest | guest@luxestay.com  | guest123  | `/account`    |
 
-The app will be available at [http://localhost:3000](http://localhost:3000)
+The login page also has one-click demo buttons. **Reset demo data** is in the dashboard sidebar.
 
-## Project Structure
+## What's included
 
-```
-frontend/
-├── app/                    # Next.js App Router
-│   ├── page.tsx           # Landing page
-│   ├── login/             # Login page
-│   ├── register/          # Registration page
-│   ├── rooms/             # Public rooms listing
-│   └── dashboard/         # Protected dashboard
-│       ├── page.tsx       # Dashboard home
-│       ├── rooms/         # Room management
-│       ├── bookings/      # Booking management
-│       └── users/         # User management (admin)
-├── lib/                   # Utilities
-│   ├── api.ts            # API client with axios
-│   └── auth-context.tsx  # Authentication context
-└── ...config files
-```
+**Guest website**
+- Home: hero with availability search, rooms, amenities, dining, spa, offers, events, reviews
+- Rooms list (filters, live availability) and room detail with price calculator
+- 3-step booking: dates & room → extras (breakfast, airport pickup…) → details & payment (card / mobile money / pay at hotel)
+- Dining: restaurants, full menu with categories & search, basket, checkout (room service / dine-in / takeaway), live order tracking
+- Spa & experiences booking (massage, yoga, airport transfer, safari…)
+- Contact form, guest account (stays, orders, spa bookings, loyalty points, reviews, profile)
 
-## Features
+**Management dashboard** (admin & staff)
+- Overview: occupancy, arrivals/departures, revenue chart, room status, live kitchen orders
+- Reservations: search/filter, confirm, assign room, check-in, check-out, cancel
+- Front desk room board by floor + room types & nightly rates
+- Housekeeping task board (completing a task frees the room)
+- Kitchen order board (New → Preparing → Ready → Delivered)
+- Menu management (add/edit/delete, hide items)
+- Spa & service requests, guests & user roles (admin), reviews moderation & inbox, staff (admin)
 
-- 🎨 Beautiful, responsive UI with Tailwind CSS
-- 🔐 JWT-based authentication
-- 📊 Dashboard with stats and overview
-- 🛏️ Room management (CRUD)
-- 📅 Booking system
-- 👥 User management (admin only)
-- 🌙 Dark mode landing page
+Tip: open the guest site and the kitchen board in two tabs — orders sync between tabs instantly.
+
+## Customising
+
+- Hotel name, phone, address, currency, tax: `lib/config.ts`
+- Demo rooms, menu, staff, photos: `lib/seed.ts`
+- Colours & fonts: `tailwind.config.ts`
+
+## Connecting the Java backend later
+
+All data access goes through one file: `lib/store.tsx`. Each action there (`login`, `createBooking`,
+`placeOrder`, `setOrderStatus`, …) can be swapped for an API call to the Java (Spring Boot) backend.
+The data shapes the backend should return are defined in `lib/types.ts`.

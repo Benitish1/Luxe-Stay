@@ -1,38 +1,56 @@
-import type { Config } from 'tailwindcss'
+import type { Config } from 'tailwindcss';
 
 const config: Config = {
-    content: [
-        './pages/**/*.{js,ts,jsx,tsx,mdx}',
-        './components/**/*.{js,ts,jsx,tsx,mdx}',
-        './app/**/*.{js,ts,jsx,tsx,mdx}',
-    ],
-    theme: {
-        extend: {
-            colors: {
-                primary: {
-                    50: '#f0f9ff',
-                    100: '#e0f2fe',
-                    200: '#bae6fd',
-                    300: '#7dd3fc',
-                    400: '#38bdf8',
-                    500: '#0ea5e9',
-                    600: '#0284c7',
-                    700: '#0369a1',
-                    800: '#075985',
-                    900: '#0c4a6e',
-                },
-                accent: {
-                    gold: '#d4af37',
-                    bronze: '#cd7f32',
-                }
-            },
-            backgroundImage: {
-                'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-                'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-                'hero-pattern': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            },
+  content: ['./app/**/*.{ts,tsx}', './components/**/*.{ts,tsx}', './lib/**/*.{ts,tsx}'],
+  theme: {
+    extend: {
+      colors: {
+        ink: {
+          DEFAULT: '#0E0D0B',
+          900: '#0E0D0B',
+          800: '#16140F',
+          700: '#211E18',
+          600: '#2E2A22',
+          500: '#4A443A',
         },
+        ivory: {
+          DEFAULT: '#F7F3EC',
+          50: '#FCFAF6',
+          100: '#F7F3EC',
+          200: '#EFE8DC',
+          300: '#E3D9C8',
+        },
+        gold: {
+          DEFAULT: '#C6A15B',
+          300: '#E6CF9F',
+          400: '#D7B97C',
+          500: '#C6A15B',
+          600: '#A9843F',
+          700: '#86672F',
+        },
+        stone: { 450: '#8A8274' },
+      },
+      fontFamily: {
+        display: ['var(--font-display)', 'Georgia', 'serif'],
+        sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
+      },
+      letterSpacing: { luxe: '0.28em' },
+      boxShadow: {
+        luxe: '0 30px 60px -20px rgba(14, 13, 11, 0.35)',
+        soft: '0 10px 30px -12px rgba(14, 13, 11, 0.18)',
+      },
+      keyframes: {
+        fadeUp: { from: { opacity: '0', transform: 'translateY(24px)' }, to: { opacity: '1', transform: 'none' } },
+        kenburns: { from: { transform: 'scale(1)' }, to: { transform: 'scale(1.12)' } },
+        slideIn: { from: { transform: 'translateX(100%)' }, to: { transform: 'none' } },
+      },
+      animation: {
+        fadeUp: 'fadeUp .9s cubic-bezier(.2,.7,.2,1) both',
+        kenburns: 'kenburns 18s ease-out both',
+        slideIn: 'slideIn .35s cubic-bezier(.2,.7,.2,1) both',
+      },
     },
-    plugins: [],
-}
-export default config
+  },
+  plugins: [],
+};
+export default config;

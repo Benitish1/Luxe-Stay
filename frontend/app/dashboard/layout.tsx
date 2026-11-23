@@ -1,128 +1,114 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useAuth } from '@/lib/auth-context';
+import { usePathname, useRouter } from 'next/navigation';
+import {
+  BedDouble, Bell, CalendarCheck, ChefHat, ClipboardList, ExternalLink, LayoutDashboard, LogOut, Menu as MenuIcon,
+  MessageSquare, RotateCcw, Sparkles, UserCog, Users, UtensilsCrossed, X,
+} from 'lucide-react';
+import { Logo } from '@/components/ui';
+import { useStore } from '@/lib/store';
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const { user, isLoading, isAuthenticated, logout } = useAuth();
+const NAV = [
+  { group: 'Overview', items: [{ href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard }] },
+  { group: 'Rooms', items: [
+    { href: '/dashboard/reservations', label: 'Reservations', icon: CalendarCheck },
+    { href: '/dashboard/rooms', label: 'Front desk & rooms', icon: BedDouble },
+    { href: '/dashboard/housekeeping', label: 'Housekeeping', icon: ClipboardList },
+  ] },
+  { group: 'Food & beverage', items: [
+    { href: '/dashboard/orders', label: 'Kitchen orders', icon: ChefHat },
+    { href: '/dashboard/menu', label: 'Menu', icon: UtensilsCrossed },
+  ] },
+  { group: 'Guests', items: [
+    { href: '/dashboard/services', label: 'Spa & services', icon: Sparkles },
+    { href: '/dashboard/guests', label: 'Guests & users', icon: Users, admin: true },
+    { href: '/dashboard/reviews', label: 'Reviews & inbox', icon: MessageSquare },
+  ] },
+  { group: 'Team', items: [{ href: '/dashboard/staff', label: 'Staff', icon: UserCog, admin: true }] },
+];
+
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
+  const { ready, user, db, logout, resetDemo } = useStore();
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      router.push('/login');
-    }
-  }, [isLoading, isAuthenticated, router]);
+    if (ready && (!user || user.role === 'guest')) router.replace('/login?next=/dashboard');
+  }, [ready, user, router]);
+  useEffect(() => setOpen(false), [pathname]);
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-primary-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
-        </div>
+  if (!user || user.role === 'guest') return <div className="grid h-screen place-items-center bg-ink"><span className="h-10 w-10 animate-spin rounded-full border-2 border-gold border-t-transparent" /></div>;
+
+  const newOrders = db.orders.filter((o) => o.status === 'received').length;
+  const pending = db.bookings.filter((b) => b.status === 'pending').length;
+  const unread = db.messages.filter((m) => !m.read).length;
+  const counts: Record<string, number> = { '/dashboard/orders': newOrders, '/dashboard/reservations': pending, '/dashboard/reviews': unread };
+
+  const sidebar = (
+    <aside className="flex h-full w-72 flex-col bg-ink text-white/70">
+      <div className="flex items-center justify-between px-6 py-6"><Logo light /><button className="lg:hidden" onClick={() => setOpen(false)} aria-label="Close menu"><X size={20} /></button></div>
+      <nav className="flex-1 space-y-6 overflow-y-auto px-4 py-2">
+        {NAV.map((g) => {
+          const items = g.items.filter((i) => !('admin' in i && i.admin) || user.role === 'admin');
+          if (!items.length) return null;
+          return (
+            <div key={g.group}>
+              <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-luxe text-white/35">{g.group}</p>
+              {items.map((i) => {
+                const active = pathname === i.href;
+                return (
+                  <Link key={i.href} href={i.href} className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition ${active ? 'bg-gold text-ink font-semibold' : 'hover:bg-white/5 hover:text-white'}`}>
+                    <i.icon size={18} strokeWidth={1.7} />
+                    <span className="flex-1">{i.label}</span>
+                    {counts[i.href] > 0 && <span className={`grid h-5 min-w-5 place-items-center rounded-full px-1.5 text-[10px] font-bold ${active ? 'bg-ink text-gold' : 'bg-gold text-ink'}`}>{counts[i.href]}</span>}
+                  </Link>
+                );
+              })}
+            </div>
+          );
+        })}
+      </nav>
+      <div className="space-y-1 border-t border-white/10 p-4">
+        <Link href="/" className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm hover:bg-white/5"><ExternalLink size={16} /> View website</Link>
+        <button onClick={() => { if (confirm('Reset all demo data to the original state?')) resetDemo(); }} className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm hover:bg-white/5"><RotateCcw size={16} /> Reset demo data</button>
+        <button onClick={() => { logout(); router.push('/login'); }} className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm text-rose-300 hover:bg-white/5"><LogOut size={16} /> Sign out</button>
       </div>
-    );
-  }
-
-  if (!isAuthenticated) {
-    return null;
-  }
-
-  const navItems = [
-    { href: '/dashboard', label: 'Dashboard', icon: '📊' },
-    { href: '/dashboard/rooms', label: 'Rooms', icon: '🛏️' },
-    { href: '/dashboard/bookings', label: 'Bookings', icon: '📅' },
-    ...(user?.role === 'admin' ? [{ href: '/dashboard/users', label: 'Users', icon: '👥' }] : []),
-  ];
+    </aside>
+  );
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Sidebar */}
-      <aside className="fixed top-0 left-0 h-full w-64 bg-gradient-to-b from-slate-900 to-slate-800 text-white shadow-xl z-40">
-        {/* Logo */}
-        <div className="p-6 border-b border-white/10">
-          <Link href="/" className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-primary-400 to-primary-600 rounded-lg flex items-center justify-center">
-              <span className="text-white text-xl font-bold">L</span>
-            </div>
-            <span className="text-xl font-bold">LuxeStay</span>
-          </Link>
-        </div>
-
-        {/* User Info */}
-        <div className="p-6 border-b border-white/10">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-primary-400 to-purple-500 rounded-full flex items-center justify-center">
-              <span className="text-white font-semibold">{user?.full_name?.charAt(0) || 'U'}</span>
-            </div>
+    <div className="min-h-screen bg-ivory-100">
+      <div className="fixed inset-y-0 left-0 z-40 hidden lg:block">{sidebar}</div>
+      {open && <div className="fixed inset-0 z-50 bg-ink/50 lg:hidden" onClick={() => setOpen(false)}><div className="h-full animate-slideIn" style={{ animationDirection: 'reverse' }} onClick={(e) => e.stopPropagation()}>{sidebar}</div></div>}
+      <div className="lg:pl-72">
+        <header className="sticky top-0 z-30 flex items-center justify-between gap-4 border-b border-ink/5 bg-ivory-100/90 px-4 py-4 backdrop-blur sm:px-8">
+          <div className="flex items-center gap-3">
+            <button className="rounded-lg p-2 hover:bg-ink/5 lg:hidden" onClick={() => setOpen(true)} aria-label="Open menu"><MenuIcon size={20} /></button>
             <div>
-              <p className="font-medium text-sm">{user?.full_name}</p>
-              <p className="text-xs text-gray-400 capitalize">{user?.role}</p>
+              <p className="text-xs text-ink-500">{new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
+              <p className="font-display text-2xl leading-tight">Good {new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 18 ? 'afternoon' : 'evening'}, {user.name.split(' ')[0]}</p>
             </div>
           </div>
-        </div>
-
-        {/* Navigation */}
-        <nav className="p-4">
-          <ul className="space-y-2">
-            {navItems.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white/10 hover:text-white transition-all duration-200"
-                >
-                  <span className="text-xl">{item.icon}</span>
-                  <span>{item.label}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        {/* Logout */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-white/10">
-          <button
-            onClick={() => {
-              logout();
-              router.push('/');
-            }}
-            className="flex items-center space-x-3 w-full px-4 py-3 rounded-lg text-gray-400 hover:bg-red-500/20 hover:text-red-400 transition-all duration-200"
-          >
-            <span className="text-xl">🚪</span>
-            <span>Logout</span>
-          </button>
-        </div>
-      </aside>
-
-      {/* Main Content */}
-      <main className="ml-64 min-h-screen">
-        {/* Top Bar */}
-        <header className="bg-white shadow-sm border-b border-gray-200 px-8 py-4 sticky top-0 z-30">
-          <div className="flex justify-between items-center">
-            <h1 className="text-xl font-semibold text-gray-800">
-              Welcome, {user?.full_name?.split(' ')[0]}! 👋
-            </h1>
-            <div className="flex items-center space-x-4">
-              <button className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                </svg>
-              </button>
+          <div className="flex items-center gap-3">
+            <Link href="/dashboard/orders" className="relative rounded-full bg-white p-2.5 shadow-soft" aria-label="New orders">
+              <Bell size={18} />
+              {newOrders + pending > 0 && <span className="absolute -right-0.5 -top-0.5 h-3 w-3 rounded-full bg-rose-500 ring-2 ring-white" />}
+            </Link>
+            <div className="hidden items-center gap-3 rounded-full bg-white py-1 pl-1 pr-4 shadow-soft sm:flex">
+              <span className="grid h-8 w-8 place-items-center rounded-full bg-gold text-xs font-bold">{user.name.split(' ').map((p) => p[0]).slice(0, 2).join('')}</span>
+              <div className="leading-tight"><p className="text-sm font-semibold">{user.name}</p><p className="text-[11px] capitalize text-ink-500">{user.role}</p></div>
             </div>
           </div>
         </header>
-
-        {/* Page Content */}
-        <div className="p-8">
-          {children}
-        </div>
-      </main>
+        <main className="p-4 sm:p-8">
+          {user.role !== 'admin' && NAV.some((g) => g.items.some((i) => 'admin' in i && i.admin && i.href === pathname))
+            ? <div className="card p-12 text-center"><p className="font-display text-3xl">Admins only</p><p className="mt-2 text-sm text-ink-500">Ask the hotel manager for access to this page.</p></div>
+            : children}
+        </main>
+      </div>
     </div>
   );
 }
