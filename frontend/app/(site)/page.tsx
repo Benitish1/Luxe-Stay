@@ -41,7 +41,7 @@ export default function Home() {
     <>
       {/* HERO */}
       <section className="grain relative flex min-h-screen items-center overflow-hidden bg-ink">
-        <Img src={IMAGES.hero} alt="LuxeStay pool at dusk" className="absolute inset-0 h-full w-full animate-kenburns" />
+        <Img src={IMAGES.hero} alt="LuxeStay poolside deck" className="absolute inset-0 h-full w-full animate-kenburns" />
         <div className="absolute inset-0 bg-gradient-to-b from-ink/70 via-ink/30 to-ink/90" />
         <div className="container-luxe relative pb-20 pt-40">
           <div className="max-w-4xl">

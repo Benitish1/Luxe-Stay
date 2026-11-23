@@ -17,7 +17,7 @@ const ago = (hours: number) => new Date(Date.now() - hours * 3600_000).toISOStri
 export const IMAGES = {
   hero: img('1566073771259-6a8506099945', 2000),
   exterior: img('1542314831-068cd1dbfeeb', 1600),
-  lobby: img('1564501049412-61c2a3083791', 1600),
+  lobby: img('1590381105924-c72589b9ef3f', 1600),
   pool: img('1571896349842-33c89424de2d', 1600),
   resort: img('1520250497591-112f2f40a3f4', 1600),
   restaurant: img('1414235077428-338989a2e8c0', 1600),
@@ -26,7 +26,7 @@ export const IMAGES = {
   spa: img('1540555700478-4be289fbecef', 1600),
   event: img('1519167758481-83f550bb49b3', 1600),
   conference: img('1505373877841-8d25f7d46678', 1600),
-  bathroom: img('1552321554-5fefe8c9ef14', 1600),
+  bathroom: img('1620626011761-996317b8d101', 1600),
   gym: img('1534438327276-14e5300c3a48', 1200),
 };
 
@@ -37,7 +37,7 @@ export const roomTypes: RoomType[] = [
     description:
       'A calm retreat dressed in warm oak and soft linen. The Deluxe Room pairs a plush king bed with a marble bathroom, rain shower and a writing desk facing the gardens — ideal for business travellers and couples alike.',
     price: 180, capacity: 2, beds: '1 King or 2 Twin', size: 34, view: 'Garden',
-    images: [img('1611892440504-42a792e24d32'), img('1552321554-5fefe8c9ef14'), img('1590490360182-c33d57733427')],
+    images: [img('1611892440504-42a792e24d32'), img('1584622650111-993a426fbf0a'), img('1590490360182-c33d57733427')],
     amenities: ['Free Wi-Fi', 'Smart TV', 'Rain shower', 'Mini bar', 'Air conditioning', 'Coffee machine', 'Work desk', 'Safe'],
     rating: 4.7,
   },
@@ -47,7 +47,7 @@ export const roomTypes: RoomType[] = [
     description:
       'Set on our upper floors, the Executive Room offers sweeping city views, a separate seating nook and complimentary access to the Executive Lounge with evening canapés and cocktails.',
     price: 260, capacity: 3, beds: '1 King + Sofa bed', size: 42, view: 'City',
-    images: [img('1590490360182-c33d57733427'), img('1618773928121-c32242e63f39'), img('1552321554-5fefe8c9ef14')],
+    images: [img('1590490360182-c33d57733427'), img('1618773928121-c32242e63f39'), img('1620626011761-996317b8d101')],
     amenities: ['Free Wi-Fi', 'Lounge access', 'Smart TV', 'Bathtub', 'Mini bar', 'Nespresso', 'Bathrobes', 'Air conditioning'],
     rating: 4.8,
   },
@@ -57,7 +57,7 @@ export const roomTypes: RoomType[] = [
     description:
       'Generous and light-filled, the Junior Suite blends bedroom and living area with a freestanding soaking tub, walk-in wardrobe and a private balcony made for slow mornings.',
     price: 380, capacity: 3, beds: '1 King', size: 58, view: 'Pool',
-    images: [img('1631049307264-da0ec9d70304'), img('1582719478250-c89cae4dc85b'), img('1552321554-5fefe8c9ef14')],
+    images: [img('1571003123894-1f0594d2b5d9'), img('1566665797739-1674de7a421a'), img('1507652313519-d4e9174996dd')],
     amenities: ['Free Wi-Fi', 'Private balcony', 'Soaking tub', 'Walk-in wardrobe', 'Lounge access', 'Bose speaker', 'Mini bar', 'Butler on call'],
     rating: 4.9,
   },
@@ -67,7 +67,7 @@ export const roomTypes: RoomType[] = [
     description:
       'Designed for families, with two connected bedrooms, a spacious living room, kids’ welcome amenities and a kitchenette. Children under 6 stay and eat breakfast free.',
     price: 420, capacity: 5, beds: '1 King + 2 Twin', size: 75, view: 'Garden',
-    images: [img('1578683010236-d716f9a3f461'), img('1591088398332-8a7791972843'), img('1552321554-5fefe8c9ef14')],
+    images: [img('1578683010236-d716f9a3f461'), img('1591088398332-8a7791972843'), img('1620626011761-996317b8d101')],
     amenities: ['Free Wi-Fi', '2 Bedrooms', 'Kitchenette', 'Kids amenities', 'Two bathrooms', 'Smart TV', 'Dining area', 'Air conditioning'],
     rating: 4.8,
   },
@@ -77,7 +77,7 @@ export const roomTypes: RoomType[] = [
     description:
       'Our signature suite spans the top floor with a private terrace and plunge pool, a grand living and dining room, a master bedroom with dressing room, and 24-hour personal butler service.',
     price: 1200, capacity: 4, beds: '1 Emperor King', size: 160, view: 'Panoramic',
-    images: [img('1582719478250-c89cae4dc85b'), img('1584132967334-10e028bd69f7'), img('1631049307264-da0ec9d70304')],
+    images: [img('1582719478250-c89cae4dc85b'), img('1584132967334-10e028bd69f7'), img('1596394516093-501ba68a0ba6')],
     amenities: ['Private terrace', 'Plunge pool', '24h Butler', 'Airport transfer', 'Dining room', 'Champagne on arrival', 'Steam room', 'Lounge access'],
     rating: 5.0,
   },
@@ -151,19 +151,19 @@ const m = (
 ): MenuItem => ({ id, name, category, price, image: img(photo, 700), description, tags, available: true, prepMinutes });
 
 export const menu: MenuItem[] = [
-  m('m1', 'Full Continental Breakfast', 'Breakfast', 18, '1533089860892-a7c6f0a88666', 'Buttermilk pancakes, maple syrup, seasonal berries and fresh juice.', ['Popular'], 15),
+  m('m1', 'Full Continental Breakfast', 'Breakfast', 18, '1528207776546-365bb710ee93', 'Buttermilk pancakes, maple syrup, seasonal berries and fresh juice.', ['Popular'], 15),
   m('m2', 'Avocado & Poached Eggs', 'Breakfast', 14, '1525351484163-7529414344d8', 'Sourdough, smashed avocado, poached eggs, chilli flakes.', ['Vegetarian'], 12),
   m('m3', 'Greek Yogurt Parfait', 'Breakfast', 9, '1488477181946-6428a0291777', 'Honey, house granola and tropical fruit.', ['Vegetarian', 'Light'], 5),
   m('m4', 'Garden Superfood Salad', 'Starters', 12, '1512621776951-a57141f2eefd', 'Quinoa, kale, avocado, pomegranate and citrus dressing.', ['Vegan', 'Gluten free'], 10),
   m('m5', 'Poke Bowl', 'Starters', 15, '1546069901-ba9599a7e63c', 'Marinated tuna, edamame, mango, sesame and rice.', ['Chef’s pick'], 12),
-  m('m6', 'Grilled Lake Tilapia', 'Mains', 26, '1467003909585-2f8a72700288', 'Whole tilapia, lemon butter, plantain and greens.', ['Local favourite'], 25),
-  m('m7', 'Truffle Tagliatelle', 'Mains', 24, '1621996346565-e3dbc646d9a9', 'Hand-cut pasta, wild mushrooms, parmesan, black truffle.', ['Vegetarian'], 20),
-  m('m8', 'Wood-fired Margherita', 'Mains', 17, '1565299624946-b28f40a0ae38', 'San Marzano tomato, buffalo mozzarella, basil.', ['Vegetarian', 'Popular'], 18),
+  m('m6', 'Grilled Lake Tilapia', 'Mains', 26, '1611599537845-1c7aca0091c0', 'Whole tilapia, lemon butter, plantain and greens.', ['Local favourite'], 25),
+  m('m7', 'Truffle Tagliatelle', 'Mains', 24, '1645112411341-6c4fd023714a', 'Hand-cut pasta, wild mushrooms, parmesan, black truffle.', ['Vegetarian'], 20),
+  m('m8', 'Wood-fired Margherita', 'Mains', 17, '1604068549290-dea0e4a305ca', 'San Marzano tomato, buffalo mozzarella, basil.', ['Vegetarian', 'Popular'], 18),
   m('m9', 'LuxeStay Signature Burger', 'Mains', 21, '1568901346375-23c9450c58cd', 'Aged beef, cheddar, caramelised onion, brioche, fries.', ['Popular'], 18),
   m('m10', 'Prime Ribeye 300g', 'Grill', 42, '1600891964092-4316c288032e', 'Dry-aged ribeye, peppercorn sauce, truffle mash.', ['Chef’s pick'], 30),
   m('m11', 'Brochette Platter', 'Grill', 22, '1555939594-58d7cb561ad1', 'Goat & beef skewers, pili-pili, roasted potatoes.', ['Spicy', 'Local favourite'], 25),
-  m('m12', 'Chocolate Fondant', 'Desserts', 11, '1578985545062-69928b1d9587', 'Molten centre, vanilla bean ice cream.', ['Popular'], 15),
-  m('m13', 'Artisan Gelato Trio', 'Desserts', 9, '1563805042-7684c019e1cb', 'Passion fruit, pistachio and dark chocolate.', ['Gluten free'], 5),
+  m('m12', 'Chocolate Fondant', 'Desserts', 11, '1624353365286-3f8d62daad51', 'Molten centre, vanilla bean ice cream.', ['Popular'], 15),
+  m('m13', 'Artisan Gelato Trio', 'Desserts', 9, '1501443762994-82bd5dace89a', 'Passion fruit, pistachio and dark chocolate.', ['Gluten free'], 5),
   m('m14', 'Single-Origin Coffee', 'Drinks', 4, '1495474472287-4d71bcdd2085', 'Locally grown highland beans — espresso, latte or cappuccino.', ['Local'], 4),
   m('m15', 'Fresh Pressed Juice', 'Drinks', 6, '1600271886742-f049cd451bba', 'Orange, passion fruit, pineapple or mixed.', ['Vegan'], 5),
   m('m16', 'Golden Hour Spritz', 'Cocktails', 13, '1514362545857-3bc16c4c7d1b', 'Aperitivo, prosecco, orange and a hint of passion fruit.', ['Signature'], 6),
@@ -176,9 +176,9 @@ export const services: Service[] = [
   { id: 's2', name: 'Couples Spa Journey', category: 'Spa', description: 'Side-by-side massage, steam and a private relaxation suite.', price: 220, duration: '2 hrs', image: img('1540555700478-4be289fbecef', 900) },
   { id: 's3', name: 'Sunrise Yoga', category: 'Wellness', description: 'Guided group session on the garden deck, every morning.', price: 20, duration: '60 min', image: img('1544367567-0f2fcb009e0b', 900) },
   { id: 's4', name: 'Personal Training', category: 'Wellness', description: 'One-on-one session with our in-house trainer.', price: 45, duration: '60 min', image: img('1534438327276-14e5300c3a48', 900) },
-  { id: 's5', name: 'Airport Transfer', category: 'Transport', description: 'Private chauffeured sedan to or from the airport.', price: 40, duration: 'One way', image: img('1436491865332-7a61a109cc05', 900) },
+  { id: 's5', name: 'Airport Transfer', category: 'Transport', description: 'Private chauffeured sedan to or from the airport.', price: 40, duration: 'One way', image: img('1449965408869-eaa3f722e40d', 900) },
   { id: 's6', name: 'Safari Day Trip', category: 'Experience', description: 'Full-day guided game drive with lunch and park fees.', price: 260, duration: 'Full day', image: img('1516426122078-c23e76319801', 900) },
-  { id: 's7', name: 'City Culture Tour', category: 'Experience', description: 'Markets, museums and local crafts with a private guide.', price: 75, duration: '4 hrs', image: img('1547471080-7cc2caa01a7e', 900) },
+  { id: 's7', name: 'City Culture Tour', category: 'Experience', description: 'Markets, museums and local crafts with a private guide.', price: 75, duration: '4 hrs', image: img('1533900298318-6b8da08a523e', 900) },
 ];
 
 export const serviceRequests: ServiceRequest[] = [

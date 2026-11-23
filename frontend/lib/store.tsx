@@ -31,7 +31,7 @@ interface DB {
 
 export interface CartLine { itemId: string; qty: number; note?: string }
 
-const STORAGE_KEY = 'luxestay-demo-v2';
+const STORAGE_KEY = 'luxestay-demo-v3';
 const SESSION_KEY = 'luxestay-session';
 const CART_KEY = 'luxestay-cart';
 
