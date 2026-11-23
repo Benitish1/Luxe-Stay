@@ -49,3 +49,5 @@ desktop.ini
 *.log
 *.sqlite3
 *.db
+.vercel
+.env*
