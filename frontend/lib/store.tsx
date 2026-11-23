@@ -31,7 +31,7 @@ interface DB {
 
 export interface CartLine { itemId: string; qty: number; note?: string }
 
-const STORAGE_KEY = 'luxestay-demo-v1';
+const STORAGE_KEY = 'luxestay-demo-v2';
 const SESSION_KEY = 'luxestay-session';
 const CART_KEY = 'luxestay-cart';
 
@@ -117,6 +117,8 @@ function useStoreValue() {
   }, []);
 
   const user = db.users.find((u) => u.id === userId) || null;
+  // Admin & staff manage the hotel from the dashboard; they don't book or order as guests
+  const isStaff = !!user && user.role !== 'guest';
 
   const patch = <K extends keyof DB>(key: K, fn: (list: DB[K]) => DB[K]) =>
     setDb((d) => ({ ...d, [key]: fn(d[key]) }));
@@ -177,12 +179,14 @@ function useStoreValue() {
     patch('roomTypes', (l) => l.map((r) => (r.id === id ? { ...r, ...data } : r)));
 
   // ---------- Menu & orders ----------
-  const addToCart = (itemId: string, qty = 1) =>
+  const addToCart = (itemId: string, qty = 1) => {
+    if (isStaff) return notify('Staff accounts manage orders from the dashboard');
     setCart((c) => {
       const ex = c.find((l) => l.itemId === itemId);
       if (ex) return c.map((l) => (l.itemId === itemId ? { ...l, qty: l.qty + qty } : l));
       return [...c, { itemId, qty }];
     });
+  };
   const setCartQty = (itemId: string, qty: number) =>
     setCart((c) => (qty <= 0 ? c.filter((l) => l.itemId !== itemId) : c.map((l) => (l.itemId === itemId ? { ...l, qty } : l))));
   const setCartNote = (itemId: string, note: string) =>
@@ -236,9 +240,45 @@ function useStoreValue() {
   };
 
   // ---------- Staff ----------
-  const saveStaff = (s: Omit<Staff, 'id'> & { id?: string }) =>
-    patch('staff', (l) => (s.id ? l.map((x) => (x.id === s.id ? { ...x, ...s } as Staff : x)) : [...l, { ...s, id: uid('st') } as Staff]));
-  const deleteStaff = (id: string) => patch('staff', (l) => l.filter((x) => x.id !== id));
+  /**
+   * Save a staff member. If `access` is given, the admin is also creating/updating
+   * their dashboard login (staff cannot register themselves).
+   */
+  const saveStaff = (
+    s: Omit<Staff, 'id'> & { id?: string },
+    access?: { email: string; password?: string; role: 'staff' | 'admin' } | null,
+  ) => {
+    const member = { ...s, id: s.id || uid('st') } as Staff;
+    if (access) {
+      const email = access.email.trim();
+      const taken = db.users.find((u) => u.email.toLowerCase() === email.toLowerCase() && u.id !== member.userId);
+      if (taken) throw new Error('Another account already uses this email');
+      if (member.userId && db.users.some((u) => u.id === member.userId)) {
+        patch('users', (l) => l.map((u) => (u.id === member.userId
+          ? { ...u, name: member.name, phone: member.phone, email, role: access.role, ...(access.password ? { password: access.password } : {}) }
+          : u)));
+      } else {
+        if (!access.password) throw new Error('Set a password for the new login');
+        const nu: User = { id: uid('u'), name: member.name, email, password: access.password, phone: member.phone, role: access.role, loyaltyPoints: 0, createdAt: new Date().toISOString() };
+        patch('users', (l) => [...l, nu]);
+        member.userId = nu.id;
+      }
+      member.email = email;
+    }
+    patch('staff', (l) => (l.some((x) => x.id === member.id) ? l.map((x) => (x.id === member.id ? member : x)) : [...l, member]));
+    return member;
+  };
+  /** Remove dashboard access but keep the staff record */
+  const revokeStaffAccess = (id: string) => {
+    const m = db.staff.find((x) => x.id === id);
+    if (m?.userId) patch('users', (l) => l.filter((u) => u.id !== m.userId));
+    patch('staff', (l) => l.map((x) => (x.id === id ? { ...x, userId: undefined, email: undefined } : x)));
+  };
+  const deleteStaff = (id: string) => {
+    const m = db.staff.find((x) => x.id === id);
+    if (m?.userId) patch('users', (l) => l.filter((u) => u.id !== m.userId));
+    patch('staff', (l) => l.filter((x) => x.id !== id));
+  };
 
   // ---------- Reviews & messages ----------
   const addReview = (r: Omit<Review, 'id' | 'date' | 'published'>) =>
@@ -267,13 +307,13 @@ function useStoreValue() {
   };
 
   return {
-    ready, db, user, toast, notify, cartOpen, setCartOpen, cart, cartLines, cartSubtotal, cartCount,
+    ready, db, user, isStaff, toast, notify, cartOpen, setCartOpen, cart, cartLines, cartSubtotal, cartCount,
     login, register, logout, updateProfile, setUserRole,
     createBooking, setBookingStatus, assignRoom,
     setRoomStatus, addRoom, deleteRoom, updateRoomType, availableCount,
     addToCart, setCartQty, setCartNote, clearCart, placeOrder, setOrderStatus, saveMenuItem, deleteMenuItem,
     requestService, setServiceRequestStatus,
-    addTask, setTaskStatus, saveStaff, deleteStaff,
+    addTask, setTaskStatus, saveStaff, revokeStaffAccess, deleteStaff,
     addReview, toggleReview, sendMessage, markMessageRead, resetDemo,
   };
 }

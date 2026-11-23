@@ -27,10 +27,11 @@ export default function AccountPage() {
 
   useEffect(() => {
     if (ready && !user) router.replace('/login?next=/account');
+    if (user && user.role !== 'guest') router.replace('/dashboard');
     if (user) { setName(user.name); setPhone(user.phone || ''); }
   }, [ready, user, router]);
 
-  if (!user) return <div className="h-screen bg-ink" />;
+  if (!user || user.role !== 'guest') return <div className="h-screen bg-ink" />;
 
   const myBookings = db.bookings.filter((b) => b.userId === user.id || b.guestEmail === user.email);
   const myOrders = db.orders.filter((o) => o.userId === user.id);

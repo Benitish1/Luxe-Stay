@@ -223,7 +223,7 @@ export const tasks: HousekeepingTask[] = [
 
 const av = (id: string) => img(id, 200);
 export const staff: Staff[] = [
-  { id: 'st1', name: 'Grace Uwase', role: 'Front Office Manager', department: 'Front Office', phone: '+250 788 222 222', shift: 'Morning', onDuty: true, avatar: av('1494790108377-be9c29b29330') },
+  { id: 'st1', name: 'Grace Uwase', role: 'Front Office Manager', department: 'Front Office', phone: '+250 788 222 222', shift: 'Morning', onDuty: true, avatar: av('1494790108377-be9c29b29330'), email: 'staff@luxestay.com', userId: 'u2' },
   { id: 'st2', name: 'Patrick Habimana', role: 'Executive Chef', department: 'Kitchen', phone: '+250 788 444 101', shift: 'Afternoon', onDuty: true, avatar: av('1507003211169-0a1dd7228f2d') },
   { id: 'st3', name: 'Claudine Mukamana', role: 'Room Attendant', department: 'Housekeeping', phone: '+250 788 444 102', shift: 'Morning', onDuty: true, avatar: av('1438761681033-6461ffad8d80') },
   { id: 'st4', name: 'Eric Niyonzima', role: 'Room Attendant', department: 'Housekeeping', phone: '+250 788 444 103', shift: 'Afternoon', onDuty: false, avatar: av('1500648767791-00dcc994a43e') },

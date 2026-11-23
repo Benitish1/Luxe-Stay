@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Clock, Users } from 'lucide-react';
 import { Img, Modal, PageHero, addDays, today } from '@/components/ui';
 import { IMAGES } from '@/lib/seed';
@@ -11,12 +12,15 @@ import type { Service } from '@/lib/types';
 const CATS = ['All', 'Spa', 'Wellness', 'Transport', 'Experience'] as const;
 
 export default function ExperiencesPage() {
-  const { db, user, requestService, notify } = useStore();
+  const router = useRouter();
+  const { db, user, isStaff, requestService, notify } = useStore();
   const [cat, setCat] = useState<(typeof CATS)[number]>('All');
   const [sel, setSel] = useState<Service | null>(null);
   const [form, setForm] = useState({ name: '', date: addDays(today(), 1), time: '10:00', people: 1 });
 
-  const open = (s: Service) => { setSel(s); setForm((f) => ({ ...f, name: user?.name || f.name })); };
+  const open = (s: Service) => {
+    if (!user) { notify('Create an account or sign in to book'); router.push('/register?next=/experiences'); return; }
+    setSel(s); setForm((f) => ({ ...f, name: user?.name || f.name })); };
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!sel) return;
@@ -51,7 +55,7 @@ export default function ExperiencesPage() {
                     <p className="font-display text-3xl">{money(s.price)}</p>
                     <p className="flex items-center gap-1 text-xs text-ink-500"><Clock size={12} />{s.duration}</p>
                   </div>
-                  <button onClick={() => open(s)} className="btn-dark btn-sm">Book</button>
+                  {!isStaff && <button onClick={() => open(s)} className="btn-dark btn-sm">Book</button>}
                 </div>
               </div>
             </div>

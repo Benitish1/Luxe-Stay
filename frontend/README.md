@@ -11,15 +11,26 @@ npm install
 npm run dev        # http://localhost:3000
 ```
 
-## Demo accounts
+## Accounts & who can do what
 
-| Role  | Email               | Password  | Goes to       |
-|-------|---------------------|-----------|---------------|
-| Admin | admin@luxestay.com  | admin123  | `/dashboard`  |
-| Staff | staff@luxestay.com  | staff123  | `/dashboard`  |
-| Guest | guest@luxestay.com  | guest123  | `/account`    |
+| Who | How they get an account | Where they sign in | What they can do |
+|---|---|---|---|
+| **Guests (clients)** | Create their own account at `/register` | `/login` | Book rooms, order food, book spa, track orders |
+| **Staff** | The admin creates their login in **Dashboard → Staff** | Staff portal: `/login?portal=staff` (link in footer) | Manage reservations, kitchen, rooms, housekeeping |
+| **Admin** | Created by another admin (Dashboard → Staff, access level "Admin") | Staff portal | Everything, including staff logins & users |
 
-The login page also has one-click demo buttons. **Reset demo data** is in the dashboard sidebar.
+- Visitors can browse freely, but must **create an account (or sign in) before booking or ordering**.
+- Admin & staff **cannot** book or order on the guest website; they work from the dashboard.
+
+Demo logins:
+
+| Role  | Email               | Password  |
+|-------|---------------------|-----------|
+| Admin | admin@luxestay.com  | admin123  |
+| Staff | staff@luxestay.com  | staff123  |
+| Guest | guest@luxestay.com  | guest123  |
+
+**Reset demo data** is in the dashboard sidebar.
 
 ## What's included
 

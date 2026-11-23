@@ -7,6 +7,7 @@ import { Check, CreditCard, Smartphone, Building2, PartyPopper, ArrowLeft, Arrow
 import { Img, addDays, fmtDate, today } from '@/components/ui';
 import { EXTRAS, quoteBooking, useStore } from '@/lib/store';
 import { money } from '@/lib/config';
+import GuestGate from '@/components/GuestGate';
 import type { Booking } from '@/lib/types';
 
 const steps = ['Your stay', 'Enhance', 'Details & payment'];
@@ -62,7 +63,7 @@ function BookInner() {
           ))}
         </div>
         <div className="mt-10 flex flex-wrap justify-center gap-3">
-          {user ? <Link href="/account" className="btn-dark">View my bookings</Link> : <Link href="/register" className="btn-dark">Create account & earn points</Link>}
+          <Link href="/account" className="btn-dark">View my bookings</Link>
           <Link href="/dining" className="btn-outline">Pre-order dinner</Link>
         </div>
       </section>
@@ -155,7 +156,7 @@ function BookInner() {
         {step === 2 && (
           <form onSubmit={confirm} className="reveal space-y-8">
             <h1 className="h-display text-5xl">Your details</h1>
-            {!user && <p className="rounded-2xl bg-gold/10 p-4 text-sm">Have an account? <Link href="/login?next=/book" className="font-semibold text-gold-700 underline">Sign in</Link> to earn {Math.round(q.total)} loyalty points on this stay.</p>}
+            <p className="rounded-2xl bg-gold/10 p-4 text-sm">You&apos;ll earn <b>{Math.round(q.total)} loyalty points</b> on this stay.</p>
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="sm:col-span-2"><span className="label">Full name</span><input required className="input" value={name} onChange={(e) => setName(e.target.value)} /></label>
               <label><span className="label">Email</span><input required type="email" className="input" value={email} onChange={(e) => setEmail(e.target.value)} /></label>
@@ -224,7 +225,7 @@ export default function BookPage() {
   return (
     <>
       <div className="h-24 bg-ink sm:h-28" />
-      <Suspense><BookInner /></Suspense>
+      <Suspense><GuestGate action="book your stay"><BookInner /></GuestGate></Suspense>
     </>
   );
 }

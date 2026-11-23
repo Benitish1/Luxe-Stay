@@ -1,13 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import AuthShell from '@/components/AuthShell';
 import { useStore } from '@/lib/store';
 
-export default function RegisterPage() {
+function RegisterForm() {
   const router = useRouter();
+  const params = useSearchParams();
+  const next = params.get('next');
   const { register, notify } = useStore();
   const [f, setF] = useState({ name: '', email: '', phone: '', password: '', confirm: '' });
   const [error, setError] = useState('');
@@ -20,14 +22,14 @@ export default function RegisterPage() {
     try {
       register(f.name, f.email, f.password, f.phone);
       notify('Welcome! 250 bonus points added to your account');
-      router.push('/account');
+      router.push(next || '/account');
     } catch (err) {
       setError((err as Error).message);
     }
   };
 
   return (
-    <AuthShell title="Join the Circle" sub="Create an account to book faster, order room service and earn rewards on every stay.">
+    <AuthShell title="Join the Circle" sub="Create your free guest account to book rooms, order food and room service, and earn rewards on every stay.">
       <form onSubmit={submit} className="space-y-4">
         <label className="block"><span className="label">Full name</span><input required className="input" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} /></label>
         <div className="grid gap-4 sm:grid-cols-2">
@@ -41,7 +43,12 @@ export default function RegisterPage() {
         {error && <p className="rounded-xl bg-rose-50 px-4 py-3 text-sm text-rose-700">{error}</p>}
         <button className="btn-gold w-full">Create account</button>
       </form>
-      <p className="mt-6 text-center text-sm text-ink-500">Already a member? <Link href="/login" className="font-semibold text-gold-700 hover:underline">Sign in</Link></p>
+      <p className="mt-6 text-center text-sm text-ink-500">Already a member? <Link href={`/login${next ? `?next=${encodeURIComponent(next)}` : ''}`} className="font-semibold text-gold-700 hover:underline">Sign in</Link></p>
+      <p className="mt-3 text-center text-xs text-ink-500">Hotel staff? Your login is created by the manager. <Link href="/login?portal=staff" className="underline hover:text-ink">Staff login</Link></p>
     </AuthShell>
   );
+}
+
+export default function RegisterPage() {
+  return <Suspense><RegisterForm /></Suspense>;
 }

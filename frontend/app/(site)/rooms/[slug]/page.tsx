@@ -13,7 +13,7 @@ function RoomDetail() {
   const { slug } = useParams<{ slug: string }>();
   const params = useSearchParams();
   const router = useRouter();
-  const { db, availableCount } = useStore();
+  const { db, isStaff, availableCount } = useStore();
   const room = db.roomTypes.find((r) => r.slug === slug);
   const [active, setActive] = useState(0);
   const [checkIn, setCheckIn] = useState(params.get('checkIn') || addDays(today(), 1));
@@ -100,10 +100,10 @@ function RoomDetail() {
               <p className={`text-center text-xs font-semibold ${avail > 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
                 {avail > 0 ? `✓ ${avail} room${avail > 1 ? 's' : ''} available for these dates` : 'Sold out for these dates — try others'}
               </p>
-              <button disabled={avail === 0 || q.nights < 1} onClick={() => router.push(`/book?room=${room.slug}&checkIn=${checkIn}&checkOut=${checkOut}&guests=${guests}`)} className="btn-gold w-full">
+              <button disabled={isStaff || avail === 0 || q.nights < 1} onClick={() => router.push(`/book?room=${room.slug}&checkIn=${checkIn}&checkOut=${checkOut}&guests=${guests}`)} className="btn-gold w-full">
                 Reserve now
               </button>
-              <p className="text-center text-xs text-ink-500">You won&apos;t be charged yet</p>
+              <p className="text-center text-xs text-ink-500">{isStaff ? 'Reservations are made by guests' : 'You won’t be charged yet'}</p>
             </div>
           </div>
         </aside>

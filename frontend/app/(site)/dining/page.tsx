@@ -17,7 +17,7 @@ const venues = [
 ];
 
 export default function DiningPage() {
-  const { db, cart, addToCart, setCartQty, cartCount, cartSubtotal, setCartOpen, notify } = useStore();
+  const { db, isStaff, cart, addToCart, setCartQty, cartCount, cartSubtotal, setCartOpen, notify } = useStore();
   const [cat, setCat] = useState<(typeof CATS)[number]>('All');
   const [q, setQ] = useState('');
 
@@ -92,7 +92,7 @@ export default function DiningPage() {
                       <p className="mt-2 flex-1 text-sm text-ink-500">{m.description}</p>
                       <div className="mt-5 flex items-center justify-between">
                         <span className="flex items-center gap-1.5 text-xs text-ink-500"><Clock size={13} />{m.prepMinutes} min</span>
-                        {qty === 0 ? (
+                        {isStaff ? null : qty === 0 ? (
                           <button disabled={!m.available} onClick={() => { addToCart(m.id); notify(`${m.name} added to basket`); }} className="btn-dark btn-sm"><Plus size={14} /> Add</button>
                         ) : (
                           <div className="flex items-center gap-2 rounded-full bg-ink p-1 text-white">

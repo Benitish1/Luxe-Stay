@@ -19,7 +19,7 @@ const links = [
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, cartCount, setCartOpen, logout } = useStore();
+  const { user, isStaff, cartCount, setCartOpen, logout } = useStore();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -53,10 +53,10 @@ export default function Navbar() {
           ))}
         </nav>
         <div className="flex items-center gap-2">
-          <button onClick={() => setCartOpen(true)} className="relative rounded-full p-2.5 text-white/85 transition hover:bg-white/10 hover:text-gold" aria-label="Open order basket">
+          {!isStaff && <button onClick={() => setCartOpen(true)} className="relative rounded-full p-2.5 text-white/85 transition hover:bg-white/10 hover:text-gold" aria-label="Open order basket">
             <ShoppingBag size={20} />
             {cartCount > 0 && <span className="absolute -right-0.5 -top-0.5 grid h-5 min-w-5 place-items-center rounded-full bg-gold px-1 text-[10px] font-bold text-ink">{cartCount}</span>}
-          </button>
+          </button>}
           <div className="relative">
             {user ? (
               <button onClick={() => setMenuOpen((v) => !v)} className="flex items-center gap-2 rounded-full p-1 pr-3 text-white/85 transition hover:bg-white/10" aria-label="Account menu">
@@ -64,7 +64,11 @@ export default function Navbar() {
                 <span className="hidden text-sm sm:inline">{user.name.split(' ')[0]}</span>
               </button>
             ) : (
-              <Link href="/login" className="rounded-full p-2.5 text-white/85 transition hover:bg-white/10 hover:text-gold" aria-label="Sign in"><UserIcon size={20} /></Link>
+              <div className="flex items-center gap-1">
+                <Link href="/login" className="hidden rounded-full px-3 py-2 text-[13px] font-medium text-white/85 transition hover:text-gold md:inline-flex">Sign in</Link>
+                <Link href="/login" className="rounded-full p-2.5 text-white/85 transition hover:bg-white/10 hover:text-gold md:hidden" aria-label="Sign in"><UserIcon size={20} /></Link>
+                <Link href="/register" className="btn-ghost-light btn-sm hidden md:inline-flex">Create account</Link>
+              </div>
             )}
             {menuOpen && user && (
               <div className="reveal absolute right-0 mt-3 w-56 overflow-hidden rounded-2xl bg-white py-2 text-sm text-ink shadow-luxe">
@@ -75,12 +79,14 @@ export default function Navbar() {
                 {user.role !== 'guest' && (
                   <Link href="/dashboard" className="flex items-center gap-2 px-4 py-2.5 hover:bg-ivory"><LayoutDashboard size={16} /> Management dashboard</Link>
                 )}
-                <Link href="/account" className="flex items-center gap-2 px-4 py-2.5 hover:bg-ivory"><UserIcon size={16} /> My account</Link>
+                {!isStaff && <Link href="/account" className="flex items-center gap-2 px-4 py-2.5 hover:bg-ivory"><UserIcon size={16} /> My account</Link>}
                 <button onClick={() => { logout(); router.push('/'); }} className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-rose-600 hover:bg-ivory"><LogOut size={16} /> Sign out</button>
               </div>
             )}
           </div>
-          <Link href="/book" className="btn-gold btn-sm ml-1 hidden sm:inline-flex">Book Now</Link>
+          {isStaff
+            ? <Link href="/dashboard" className="btn-gold btn-sm ml-1 hidden sm:inline-flex"><LayoutDashboard size={14} /> Dashboard</Link>
+            : <Link href="/book" className="btn-gold btn-sm ml-1 hidden sm:inline-flex">Book Now</Link>}
           <button onClick={() => setOpen((v) => !v)} className="rounded-full p-2.5 text-white lg:hidden" aria-label="Toggle menu">
             {open ? <X size={22} /> : <Menu size={22} />}
           </button>
@@ -91,7 +97,14 @@ export default function Navbar() {
           {links.map((l) => (
             <Link key={l.href} href={l.href} className="border-b border-white/10 py-3 font-display text-2xl text-white">{l.label}</Link>
           ))}
-          <Link href="/book" className="btn-gold mt-4">Book Your Stay</Link>
+          {isStaff ? (
+            <Link href="/dashboard" className="btn-gold mt-4">Open dashboard</Link>
+          ) : (
+            <>
+              <Link href="/book" className="btn-gold mt-4">Book Your Stay</Link>
+              {!user && <Link href="/register" className="btn-ghost-light mt-2">Create an account</Link>}
+            </>
+          )}
         </nav>
       )}
     </header>

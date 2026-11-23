@@ -10,6 +10,7 @@ import RoomCard from '@/components/RoomCard';
 import { Img, SectionTitle, Stars } from '@/components/ui';
 import { IMAGES } from '@/lib/seed';
 import { useStore } from '@/lib/store';
+import { UserPlus, LayoutDashboard, CalendarCheck } from 'lucide-react';
 import { money } from '@/lib/config';
 
 const amenities = [
@@ -30,7 +31,7 @@ const offers = [
 ];
 
 export default function Home() {
-  const { db } = useStore();
+  const { db, user, isStaff } = useStore();
   const [rv, setRv] = useState(0);
   const reviews = db.reviews.filter((r) => r.published);
   const review = reviews[rv % Math.max(1, reviews.length)];
@@ -52,7 +53,26 @@ export default function Home() {
               Elegant rooms, a world-class kitchen, a serene spa and service that remembers your name. Book direct for our best rates and exclusive perks.
             </p>
           </div>
-          <div className="reveal mt-12" style={{ animationDelay: '.45s' }}>
+          <div className="reveal mt-10 flex flex-wrap gap-3" style={{ animationDelay: '.4s' }}>
+            {isStaff ? (
+              <Link href="/dashboard" className="btn-gold px-8 py-4 text-base"><LayoutDashboard size={18} /> Open dashboard</Link>
+            ) : (
+              <>
+                <Link href="/book" className="btn-gold px-8 py-4 text-base"><CalendarCheck size={18} /> Book your stay</Link>
+                {user ? (
+                  <Link href="/account" className="btn-ghost-light px-8 py-4 text-base">My account</Link>
+                ) : (
+                  <Link href="/register" className="btn-ghost-light px-8 py-4 text-base"><UserPlus size={18} /> Create an account</Link>
+                )}
+              </>
+            )}
+          </div>
+          {!user && (
+            <p className="reveal mt-4 text-sm text-white/60" style={{ animationDelay: '.45s' }}>
+              New here? Create a free account first, then book rooms, order food and earn rewards. Already a member? <Link href="/login" className="font-semibold text-gold-300 hover:underline">Sign in</Link>
+            </p>
+          )}
+          <div className="reveal mt-10" style={{ animationDelay: '.5s' }}>
             <BookingBar />
           </div>
           <div className="reveal mt-10 flex flex-wrap items-center gap-8 text-white/70" style={{ animationDelay: '.6s' }}>
@@ -226,7 +246,10 @@ export default function Home() {
           <div className="relative">
             <p className="eyebrow text-gold-300">Your escape awaits</p>
             <h2 className="h-display mx-auto mt-4 max-w-3xl text-5xl text-white sm:text-6xl">Reserve your stay and receive a complimentary welcome dinner.</h2>
-            <Link href="/book" className="btn-gold mt-10">Book your stay <ArrowRight size={16} /></Link>
+            <div className="mt-10 flex flex-wrap justify-center gap-3">
+              <Link href="/book" className="btn-gold">Book your stay <ArrowRight size={16} /></Link>
+              {!user && <Link href="/register" className="btn-ghost-light">Create an account</Link>}
+            </div>
           </div>
         </div>
       </section>

@@ -146,6 +146,8 @@ export interface Staff {
   shift: 'Morning' | 'Afternoon' | 'Night';
   onDuty: boolean;
   avatar: string;
+  email?: string;   // login email, if the admin gave this person dashboard access
+  userId?: string;  // linked user account
 }
 
 export interface Review {

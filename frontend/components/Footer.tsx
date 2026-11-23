@@ -64,7 +64,7 @@ export default function Footer() {
       </div>
       <div className="container-luxe relative flex flex-col justify-between gap-2 border-t border-white/10 py-6 text-xs sm:flex-row">
         <p>© {new Date().getFullYear()} {HOTEL.name} {HOTEL.tagline}. All rights reserved.</p>
-        <p>Check-in {HOTEL.checkIn} · Check-out {HOTEL.checkOut}</p>
+        <p>Check-in {HOTEL.checkIn} · Check-out {HOTEL.checkOut} · <Link href="/login?portal=staff" className="hover:text-gold">Staff login</Link></p>
       </div>
     </footer>
   );

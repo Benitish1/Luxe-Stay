@@ -8,8 +8,19 @@ import { Empty } from '@/components/ui';
 import { quoteOrder, useStore } from '@/lib/store';
 import { money } from '@/lib/config';
 import type { Order } from '@/lib/types';
+import GuestGate from '@/components/GuestGate';
+import { Suspense } from 'react';
 
 export default function CheckoutPage() {
+  return (
+    <>
+      <div className="h-24 bg-ink sm:h-28" />
+      <Suspense><GuestGate action="place your order"><Checkout /></GuestGate></Suspense>
+    </>
+  );
+}
+
+function Checkout() {
   const router = useRouter();
   const { db, user, cartLines, cartSubtotal, placeOrder, setCartNote } = useStore();
   // If the signed-in guest is currently checked in, pre-fill their room
@@ -32,7 +43,6 @@ export default function CheckoutPage() {
 
   return (
     <>
-      <div className="h-24 bg-ink sm:h-28" />
       <section className="container-luxe py-14">
         {cartLines.length === 0 ? (
           <Empty icon={<ShoppingBag />} title="Your basket is empty" sub="Add a few dishes from our menu first." action={<Link href="/dining#menu" className="btn-dark">Browse menu</Link>} />
